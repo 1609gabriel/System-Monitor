@@ -3,6 +3,5 @@
 
 int main() {
   System system;
-  system.Kernel();
   NCursesDisplay::Display(system);
 }

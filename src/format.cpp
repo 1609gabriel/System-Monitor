@@ -13,7 +13,7 @@ using std::istringstream;
 // OUTPUT: HH:MM:SS
 // REMOVE: [[maybe_unused]] once you define the function
 string Format::ElapsedTime(long time_sys) { 
-    string line, day_, month_, nb_, time, year;
+    string line, day_, month_, nb_, time_, year;
     time_t t= time_sys;             /*convert time_sys[sec.] to time_t (inherited from C), 
                                     time_t enables to represents the system time*/
     string time_string= ctime(&t);  //convert time_t value to string(https://www.cplusplus.com/reference/ctime/ctime/)
@@ -22,7 +22,7 @@ string Format::ElapsedTime(long time_sys) {
     if(stream){
         getline(stream, line);
         istringstream linestream(line);
-        linestream >> day_ >> month_ >> nb_ >> time >> year;
+        linestream >> day_ >> month_ >> nb_ >> time_ >> year;
   }
-    return time; 
+    return time_; 
 }

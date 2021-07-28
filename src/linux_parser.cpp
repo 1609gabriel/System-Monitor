@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 #include "linux_parser.h"
 
 using std::stof;
@@ -76,20 +77,19 @@ see https://stackoverflow.com/questions/41224738/how-to-calculate-system-memory-
 
 float LinuxParser::MemoryUtilization() { 
   string line, value, key;
-  string memTotal, memTotalValString;
-  string memFree, memFreeValString;
-  string memTotalVal, memFreeVal; 
-  float memUtil;
+  float memUtil, memFreeVal, memTotalVal;
   std::ifstream memstream(kProcDirectory + kMeminfoFilename);
   if(memstream.is_open()){
     while(std::getline(memstream, line)){
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::remove(line.begin(), line.end(), ' ');
       std::istringstream stream (line);
-      stream >> key>> value;
-      if(key == "MemTotal"){ memTotalVal = value;}
-      if(key == "MemFree"){ memFreeVal = value;}
+      while(stream >> key>> value);
+      if(key == "MemTotal"){ stream >> memTotalVal;}
+      if(key == "MemFree"){ stream >> memFreeVal;break;} 
     }
   }
-    memUtil= stof(memTotalVal) - stof(memFreeVal);
+    memUtil= (memTotalVal- memFreeVal)/ memFreeVal;
     return memUtil;
 }
   
@@ -127,32 +127,71 @@ long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) {
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
   std::vector<string> jif= CpuUtilization();
-  return stol(jif[CPUStates::kUser_]) + stol(jif[CPUStates::kNice_]) + stol(jif[CPUStates::kSystem_]) +
-  stol(jif[CPUStates::kIRQ_]) + stol(jif[CPUStates::kSoftIRQ_]) + stol(jif[CPUStates::kSteal_]) +
-  stol(jif[CPUStates::kGuest_]) + stol(jif[CPUStates::kGuestNice_]);
+  long a, b, c, d, e, f, g, h;
+ 
+  if((jif[CPUStates::kUser_]).empty()) {
+    a=0;
+  } else a= stol(jif[CPUStates::kUser_]);
+
+  if((jif[CPUStates::kNice_]).empty()) {
+    b=0; 
+  } else b= stol(jif[CPUStates::kNice_]); 
+
+  if((jif[CPUStates::kSystem_]).empty()) {
+    c=0;
+  } else c= stol(jif[CPUStates::kSystem_]);
+
+  if((jif[CPUStates::kIRQ_]).empty()) {
+   d=0; 
+  } else d= stol(jif[CPUStates::kIRQ_]);
+
+  if ((jif[CPUStates::kSoftIRQ_]).empty()) {
+    e=0;
+  } else e= stol(jif[CPUStates::kSoftIRQ_]);
+
+  if((jif[CPUStates::kSteal_]).empty())  {
+    f=0;
+  } else f= stol(jif[CPUStates::kSteal_]);
+
+  if((jif[CPUStates::kGuest_]).empty()){
+    g=0;
+  } else g= stol(jif[CPUStates::kGuest_]);
+
+  if((jif[CPUStates::kGuestNice_]).empty()) {
+   h=0;
+  } else h= stol(jif[CPUStates::kGuestNice_]);
+
+  return a + b + c + d + e + f + g + h;
 }
 
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { 
   std::vector<string>cpu= CpuUtilization();
-  return stol(cpu[CPUStates::kIdle_]) + stol(cpu[CPUStates::kIOwait_]);
+  long i, j;
+
+  if((cpu[CPUStates::kIdle_]).empty()){
+    i=0;
+  } else i= stol(cpu[CPUStates::kIdle_]);
+  
+ if((cpu[CPUStates::kIOwait_]).empty()){
+    j=0;
+  }else j= stol(cpu[CPUStates::kIOwait_]);
+
+  return i + j;  
   }
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
   vector<string>cpu;
-  string line, n;
+  string key, value, line, n;
   std::ifstream CPUstream(kProcDirectory + kStatFilename);
   if(CPUstream.is_open()){
     std::getline(CPUstream, line);
     std::istringstream linestream(line);
-    std::replace(line.begin(), line.end(), ' ', '_');
-    while(linestream >> n){
-      if(n=="cpu")      
-      std::replace(line.begin(), line.end(), '_', ' ');
-      cpu.push_back(n); 
+    while(linestream >> value){      
+      cpu.push_back(value);
     }
-    return cpu;
+    cpu[0].erase();
   }
   return cpu; 
 }

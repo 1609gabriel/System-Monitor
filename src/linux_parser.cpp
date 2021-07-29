@@ -72,27 +72,31 @@ vector<int> LinuxParser::Pids() {
 
 // TODO: Read and return the system memory utilization
 
-/* Memory Utilization() based on the formula --> Total used memory = MemTotal - MemFree
+/* Memory Utilization() based on the formula --> Total used memory = MemTotal - MemFree/ MemTotal
+more information concerning memory utilization 
 see https://stackoverflow.com/questions/41224738/how-to-calculate-system-memory-usage-from-proc-meminfo-like-htop/41251290#41251290from */
 
 float LinuxParser::MemoryUtilization() { 
-  string line, value, key;
+  string line, value, key, memTot, memFree; 
   float memUtil, memFreeVal, memTotalVal;
   std::ifstream memstream(kProcDirectory + kMeminfoFilename);
   if(memstream.is_open()){
     while(std::getline(memstream, line)){
       std::replace(line.begin(), line.end(), ':', ' ');
-      std::remove(line.begin(), line.end(), ' ');
       std::istringstream stream (line);
-      while(stream >> key>> value);
-      if(key == "MemTotal"){ stream >> memTotalVal;}
-      if(key == "MemFree"){ stream >> memFreeVal;break;} 
+      stream >> key >> value;
+        if(key == "MemTotal"){ 
+          memTotalVal= stof(value);
+          }
+        if(key == "MemFree"){
+          memFreeVal= stof(value);
+          }   
+    memUtil= (memTotalVal- memFreeVal)/memTotalVal;
     }
   }
-    memUtil= (memTotalVal- memFreeVal)/ memFreeVal;
-    return memUtil;
+  return memUtil;
 }
-  
+   
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { 
   string line, value, key;

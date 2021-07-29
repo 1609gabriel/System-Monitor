@@ -15,7 +15,7 @@ using std::vector;
 // TODO: Return the aggregate CPU utilization
 
 float Processor::Utilization() { 
-  float utilization;
+  float totaldFloat, idledFloat, utilization;
   long idle, nonIdle, totald, idled, prevTotal, total;
 
   utilization=0;
@@ -28,7 +28,10 @@ float Processor::Utilization() {
   totald= total - prevTotal;
   idled= idle - prevIdle;
 
-  utilization= (totald - idled)/ totald; 
+  totaldFloat= totald;
+  idledFloat= idled;
+
+  utilization= (totaldFloat - idledFloat)/ totaldFloat; 
   
   prevIdle= idle;
   prevNonidle= nonIdle;

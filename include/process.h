@@ -22,7 +22,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
    std::string user_;
-   std::string pid_;
+   int pid_;
 };
 
 #endif

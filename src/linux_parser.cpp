@@ -251,25 +251,23 @@ string LinuxParser::Command(int pid) {
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) { 
-  string line, key, pidConv, stringVal;
-  long ramVal, ramValMB;
+  string line, key, value{""}, pidConv, stringVal;
+  long ramVal;
   string pidConvert= to_string(pid);
-  std::ifstream ramStream(kProcDirectory+pidConvert+kCmdlineFilename);
+  std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
   if(ramStream.is_open()){
-    while(std::getline(ramStream, line)){
+      std::getline(ramStream, line);
       std::replace(line.begin(), line.end(), ':', ' ');
-      std::istringstream linestream(line);
-      while(linestream >> key){
+      std::istringstream rmstream(line);
+      while (rmstream >> key){  
         if(key=="VmSize"){
-          linestream >> ramVal;
-          ramValMB= ramVal*1000;
-          stringVal= to_string(ramValMB);
+          //linestream >> ramVal;
+          stringVal= to_string(ramVal*1000);
           return stringVal;
-          }
+        }
       }
-    }
   }  
-return stringVal; 
+  return stringVal; 
 }
 
 // TODO: Read and return the user ID associated with a process
@@ -332,6 +330,7 @@ long LinuxParser::UpTime(int pid) {
          }else{
          time=stol(my_vector[21]);
           }
+
     return UpTime()-(time/sysconf(_SC_CLK_TCK));
       }
     }

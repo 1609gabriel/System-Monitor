@@ -11,6 +11,7 @@ It contains relevant attributes as shown below
 */
 class Process {
  public:
+  Process(int pid);
   int Pid();                               // TODO: See src/process.cpp
   string User();                           // TODO: See src/process.cpp
   string Command();                        // TODO: See src/process.cpp
@@ -21,7 +22,9 @@ class Process {
 
   // TODO: Declare any necessary private members
  private:
-   std::string user_;
+   std::string user_, command_;
+   long ram_, upTime_;
+   float cpu_;
    int pid_;
 };
 

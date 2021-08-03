@@ -14,19 +14,24 @@ using std::vector;
 using std::stol;
 
 
-Process::Process(int pid){
-    string ram;
+Process::Process(int pid){          //constructor
+    float elapsedTime; // measured in sec.
+    string ram_;
     pid_=pid;
     command_=LinuxParser::Command(pid);
-    ram= LinuxParser::Ram(pid);
-    if(ram.empty()==true){
+    ram_= LinuxParser::Ram(pid);
+    /*if(ram.empty()==true){
         ram_=0;
     } else {
         ram_=stol(ram);
-    }
+    }*/
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);
-    cpu_=float(LinuxParser::ActiveJiffies(pid))/float(LinuxParser::UpTime()-upTime_);
+
+    //details see https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
+    
+    elapsedTime = UpTime() - (upTime_/sysconf(_SC_CLK_TCK)); 
+    cpu_=float(LinuxParser::ActiveJiffies(pid)/sysconf(_SC_CLK_TCK))/elapsedTime;
 }
 
 // TODO: Return this process's ID

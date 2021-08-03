@@ -125,8 +125,47 @@ long LinuxParser::Jiffies() {
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { 
-  return 0; }
+long LinuxParser::ActiveJiffies(int pid) { 
+  /*To calculate CPU usage for a specific process see: 
+  https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599 */
+  
+  string line, value;
+  vector<string>jif_vector;
+  string pidConvert= to_string(pid);
+  long totalTime;
+  long utime=0;     /*CPU time spent in user code, measured in clock ticks*/
+  long stime=0;     /*CPU time spent in kernel code, measured in clock ticks*/
+  long cutime=0;    /*Waited-for children's CPU time spent in user code (in clock ticks)*/
+  long cstime=0;    /*Waited-for children's CPU time spent in kernel code (in clock ticks)*/
+
+  std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   // cat /proc/[pid]/stat - Linux terminal
+  if(jifstream.is_open()){
+    std::getline(jifstream, line);
+    std::istringstream linestream(line);
+    while(linestream >> value){
+      jif_vector.push_back(value);       //all strings from stream will be pushed in jif_vector
+    }
+  }
+
+  if(jif_vector[13].empty()){           // see https://man7.org/linux/man-pages/man5/proc.5.html
+    utime=0;
+  } else {utime = stol(jif_vector[13]);}
+
+  if(jif_vector[14].empty()){
+    stime=0;
+  } else {stime = stol(jif_vector[14]);}
+
+  if(jif_vector[15].empty()){
+    cutime=0;
+  } else {cutime = stol(jif_vector[15]);}
+
+  if(jif_vector[16].empty()){
+    cstime=0;
+  } else {cutime = stol(jif_vector[16]);}
+  
+  totalTime= utime + stime + cutime + cstime;
+  return totalTime;
+}
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 

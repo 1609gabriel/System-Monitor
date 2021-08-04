@@ -6,6 +6,7 @@
 
 #include "linux_parser.h"
 #include "process.h"
+#include "format.h"
 
 using std::stof;
 using std::stoi;
@@ -287,27 +288,46 @@ string LinuxParser::Command(int pid) {
   return line; 
 }
 
+
+
+
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
+
 string LinuxParser::Ram(int pid) { 
+  string line, value, VmSize;
+  vector<string>ram_vector;
+  string pidConvert= to_string(pid);
+  std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
+  if(ramStream.is_open()){
+      std::getline(ramStream, line);
+      //std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+      while(linestream >> value){
+        ram_vector.push_back(value);
+      }
+  VmSize= ram_vector[17];  
+    }  
+return VmSize; 
+}
+
+/*string LinuxParser::Ram(int pid) { 
   string line, key, value{""}, pidConv, stringVal;
-  long ramVal;
   string pidConvert= to_string(pid);
   std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
   if(ramStream.is_open()){
       std::getline(ramStream, line);
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream rmstream(line);
-      while (rmstream >> key){  
-        if(key=="VmSize"){
+      while (rmstream >> value >> key){  
+        if(value=="VmSize"){
           //linestream >> ramVal;
-          stringVal= to_string(ramVal*1000);
           return stringVal;
         }
       }
   }  
   return stringVal; 
-}
+}*/
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -353,25 +373,28 @@ string LinuxParser::User(int pid) {
 // TODO: Read an`d return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid) { 
-  string line, val;
+  string line, value, time;
   vector<string> my_vector;
-  long time=0;
-  string pidConvert= to_string(pid);
-  std::ifstream stream(kProcDirectory+pidConvert+kStatFilename);
-  if(stream.is_open()){
-    std::getline(stream, line);
-    std::istringstream linestream(line);
-    while(linestream >> val){
-      my_vector.push_back(val);
-      if(my_vector.size()>21){
-        if(my_vector[21].empty()==true){
-          time=0;
-         }else{
-         time=stol(my_vector[21]);
-          }
+  long startTimeTicks;          //The time the process started after system boot
+  long startTimeSec;
 
-    return UpTime()-(time/sysconf(_SC_CLK_TCK));
-      }
+  string pidConvert= to_string(pid);
+  std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
+  if(jifstream.is_open()){
+    std::getline(jifstream, line);
+    std::istringstream linestream(line);
+    while(linestream >> value){
+      my_vector.push_back(value);
+    }
+    if(my_vector[21].empty()==true){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
+                                     see https://man7.org/linux/man-pages/man5/proc.5.html*/
+    startTimeTicks=0;    
+     } else {
+    startTimeTicks= stol(my_vector[22]);
+    //return startTimeSec;
     }
   }
+startTimeSec= startTimeTicks/sysconf(_SC_CLK_TCK); //converting from "clock ticks" to sec.
+//time = Format::ElapsedTime(startTimeSec);
+return startTimeSec;  
 }

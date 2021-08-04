@@ -13,25 +13,30 @@ using std::to_string;
 using std::vector;
 using std::stol;
 
-
 Process::Process(int pid){          //constructor
-    float elapsedTime; // measured in sec.
-    string ram_;
+    long totalTime, startTime, upTime;
+    string ram;
     pid_=pid;
     command_=LinuxParser::Command(pid);
-    ram_= LinuxParser::Ram(pid);
-    /*if(ram.empty()==true){
+    ram= LinuxParser::Ram(pid); 
+    if(ram.empty()==true){
         ram_=0;
     } else {
         ram_=stol(ram);
-    }*/
+    }
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);
 
     //details see https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
-    
-    elapsedTime = UpTime() - (upTime_/sysconf(_SC_CLK_TCK)); 
-    cpu_=float(LinuxParser::ActiveJiffies(pid)/sysconf(_SC_CLK_TCK))/elapsedTime;
+    upTime = LinuxParser::UpTime();
+    totalTime= LinuxParser::ActiveJiffies(pid);
+    startTime= LinuxParser::UpTime(pid);
+
+    long a = totalTime/ (sysconf(_SC_CLK_TCK));
+    long b = upTime - startTime;
+
+    //cpu_=float(totalTime)/float(upTime-upTime_);
+    cpu_= float((a/b)*100);
 }
 
 // TODO: Return this process's ID
@@ -69,4 +74,7 @@ long int Process::UpTime() {
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& a) const {
+   return this ->cpu_ > a.cpu_;                 /*the left part of the operation is referring the object itself*/
+}
+

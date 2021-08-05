@@ -29,14 +29,10 @@ Process::Process(int pid){          //constructor
 
     //details see https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
     upTime = LinuxParser::UpTime();
-    totalTime= LinuxParser::ActiveJiffies(pid);
-    startTime= LinuxParser::UpTime(pid);
-
-    long a = totalTime/ (sysconf(_SC_CLK_TCK));
-    long b = upTime - startTime;
-
-    //cpu_=float(totalTime)/float(upTime-upTime_);
-    cpu_= float((a/b)*100);
+    totalTime= LinuxParser::ActiveJiffies(pid)/(sysconf(_SC_CLK_TCK));
+    startTime= LinuxParser::UpTime(pid)/(sysconf(_SC_CLK_TCK));
+    
+    cpu_=100*(totalTime/(upTime-startTime));
 }
 
 // TODO: Return this process's ID

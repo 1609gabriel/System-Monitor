@@ -143,30 +143,27 @@ long LinuxParser::ActiveJiffies(int pid) {
   if(jifstream.is_open()){
     std::getline(jifstream, line);
     std::istringstream linestream(line);
-    while(linestream >> value){
+    while(linestream >> value){          //see https://man7.org/linux/man-pages/man5/proc.5.html
       jif_vector.push_back(value);       //all strings from stream will be pushed in jif_vector
     }
   }
-
-  if(jif_vector[13].empty()){           // see https://man7.org/linux/man-pages/man5/proc.5.html
-    utime=0;
+  if(jif_vector[13].empty()){           
+      utime=0;
   } else {utime = stol(jif_vector[13]);}
-
   if(jif_vector[14].empty()){
-    stime=0;
+      stime=0;
   } else {stime = stol(jif_vector[14]);}
-
   if(jif_vector[15].empty()){
-    cutime=0;
+      cutime=0;
   } else {cutime = stol(jif_vector[15]);}
-
   if(jif_vector[16].empty()){
-    cstime=0;
+      cstime=0;
   } else {cutime = stol(jif_vector[16]);}
   
-  totalTime= utime + stime + cutime + cstime;
-  return totalTime;
+totalTime= utime + stime + cutime + cstime; 
+return totalTime;
 }
+  
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
@@ -288,9 +285,6 @@ string LinuxParser::Command(int pid) {
   return line; 
 }
 
-
-
-
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
 
@@ -301,7 +295,7 @@ string LinuxParser::Ram(int pid) {
   std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
   if(ramStream.is_open()){
       std::getline(ramStream, line);
-      //std::replace(line.begin(), line.end(), ':', ' ');
+      std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       while(linestream >> value){
         ram_vector.push_back(value);
@@ -310,24 +304,6 @@ string LinuxParser::Ram(int pid) {
     }  
 return VmSize; 
 }
-
-/*string LinuxParser::Ram(int pid) { 
-  string line, key, value{""}, pidConv, stringVal;
-  string pidConvert= to_string(pid);
-  std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
-  if(ramStream.is_open()){
-      std::getline(ramStream, line);
-      std::replace(line.begin(), line.end(), ':', ' ');
-      std::istringstream rmstream(line);
-      while (rmstream >> value >> key){  
-        if(value=="VmSize"){
-          //linestream >> ramVal;
-          return stringVal;
-        }
-      }
-  }  
-  return stringVal; 
-}*/
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -376,7 +352,7 @@ long LinuxParser::UpTime(int pid) {
   string line, value, time;
   vector<string> my_vector;
   long startTimeTicks;          //The time the process started after system boot
-  long startTimeSec;
+  //long startTimeSec;
 
   string pidConvert= to_string(pid);
   std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
@@ -387,14 +363,16 @@ long LinuxParser::UpTime(int pid) {
       my_vector.push_back(value);
     }
     if(my_vector[21].empty()==true){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
-                                     see https://man7.org/linux/man-pages/man5/proc.5.html*/
+                                     see https://man7.org/linux/man-pages/man5/proc.5.html */
     startTimeTicks=0;    
      } else {
     startTimeTicks= stol(my_vector[22]);
+    return startTimeTicks;
     //return startTimeSec;
     }
   }
-startTimeSec= startTimeTicks/sysconf(_SC_CLK_TCK); //converting from "clock ticks" to sec.
+//startTimeSec= startTimeTicks/sysconf(_SC_CLK_TCK); //converting from "clock ticks" to sec.
 //time = Format::ElapsedTime(startTimeSec);
-return startTimeSec;  
+//return startTimeSec;  
+return startTimeTicks;
 }

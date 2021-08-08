@@ -20,7 +20,7 @@ Process::Process(int pid){          //constructor
     command_=LinuxParser::Command(pid);
     ram= LinuxParser::Ram(pid); 
     if(ram.empty()==true){
-        ram_=0;
+        ram_=0.;
     } else {
         long rm=stol(ram);
         ram_=rm*0.001;      //converting the memory utilization into megabytes

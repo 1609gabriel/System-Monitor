@@ -292,7 +292,7 @@ string LinuxParser::Ram(int pid) {
   string line, value, key, stringVal, ramVal;
   //long ramValMB;
   string pidConvert= to_string(pid);
-  std::ifstream ramStream(kProcDirectory + pidConvert + kStatusFilename);  // cat /proc/[pid]status , [pid] - run ls /proc 
+  std::ifstream ramStream(kProcDirectory + pidConvert + kStatusFilename);  // cat /proc/[pid]/status , [pid] - run ls /proc 
   if(ramStream.is_open()){
     while(std::getline(ramStream, line)){
       std::replace(line.begin(), line.end(),':',' ');
@@ -313,7 +313,7 @@ return ramVal;
 string LinuxParser::Uid(int pid) { 
       string line, key, value;
       string pidConvert= to_string(pid);
-      std::ifstream stream (kProcDirectory + pidConvert + kStatFilename);
+      std::ifstream stream (kProcDirectory + pidConvert + kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
       if(stream.is_open()){
         while(std::getline(stream, line)){
           std::replace(line.begin(), line.end(),':',' ');
@@ -355,8 +355,6 @@ long LinuxParser::UpTime(int pid) {
   string line, value, time;
   vector<string> my_vector;
   long startTimeTicks;          //The time the process started after system boot
-  //long startTimeSec;
-
   string pidConvert= to_string(pid);
   std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
   if(jifstream.is_open()){
@@ -366,16 +364,12 @@ long LinuxParser::UpTime(int pid) {
       my_vector.push_back(value);
     }
     if(my_vector[21].empty()==true){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
-                                     see https://man7.org/linux/man-pages/man5/proc.5.html */
+                                        see https://man7.org/linux/man-pages/man5/proc.5.html */
     startTimeTicks=0;    
      } else {
     startTimeTicks= stol(my_vector[22]);
     return startTimeTicks;
-    //return startTimeSec;
     }
-  }
-//startTimeSec= startTimeTicks/sysconf(_SC_CLK_TCK); //converting from "clock ticks" to sec.
-//time = Format::ElapsedTime(startTimeSec);
-//return startTimeSec;  
+  }  
 return startTimeTicks;
 }

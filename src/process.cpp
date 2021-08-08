@@ -22,7 +22,8 @@ Process::Process(int pid){          //constructor
     if(ram.empty()==true){
         ram_=0;
     } else {
-        ram_=stol(ram);
+        long rm=stol(ram);
+        ram_=rm*0.001;      //converting the memory utilization into megabytes
     }
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);

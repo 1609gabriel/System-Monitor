@@ -7,7 +7,9 @@ CMakeFiles/monitor.dir/src/format.cpp.o
  include/linux_parser.h
 CMakeFiles/monitor.dir/src/linux_parser.cpp.o
  /home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/linux_parser.cpp
+ include/format.h
  include/linux_parser.h
+ include/process.h
 CMakeFiles/monitor.dir/src/main.cpp.o
  /home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/main.cpp
  include/ncurses_display.h
@@ -24,7 +26,10 @@ CMakeFiles/monitor.dir/src/ncurses_display.cpp.o
  include/system.h
 CMakeFiles/monitor.dir/src/process.cpp.o
  /home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/process.cpp
+ include/linux_parser.h
  include/process.h
+ include/processor.h
+ include/system.h
 CMakeFiles/monitor.dir/src/processor.cpp.o
  /home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/processor.cpp
  include/linux_parser.h

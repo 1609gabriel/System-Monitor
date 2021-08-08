@@ -146,7 +146,6 @@ long LinuxParser::ActiveJiffies(int pid) {
     while(linestream >> value){          //see https://man7.org/linux/man-pages/man5/proc.5.html
       jif_vector.push_back(value);       //all strings from stream will be pushed in jif_vector
     }
-  }
   if(jif_vector[13].empty()){           
       utime=0;
   } else {utime = stol(jif_vector[13]);}
@@ -161,6 +160,7 @@ long LinuxParser::ActiveJiffies(int pid) {
   } else {cutime = stol(jif_vector[16]);}
   
 totalTime= utime + stime + cutime + cstime; 
+  }
 return totalTime;
 }
   
@@ -275,7 +275,7 @@ int LinuxParser::RunningProcesses(){
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid) { 
+string LinuxParser::Command(int pid) {          // [pid] - run ls /proc 
   string line;
   string pidConvert= to_string(pid);
   std::ifstream commStream(kProcDirectory+pidConvert+kCmdlineFilename);
@@ -289,20 +289,23 @@ string LinuxParser::Command(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 
 string LinuxParser::Ram(int pid) { 
-  string line, value, VmSize;
-  vector<string>ram_vector;
+  string line, value, key, stringVal, ramVal;
+  //long ramValMB;
   string pidConvert= to_string(pid);
-  std::ifstream ramStream(kProcDirectory + pidConvert + kStatFilename);
+  std::ifstream ramStream(kProcDirectory + pidConvert + kStatusFilename);  // cat /proc/[pid]status , [pid] - run ls /proc 
   if(ramStream.is_open()){
-      std::getline(ramStream, line);
-      std::replace(line.begin(), line.end(), ':', ' ');
+    while(std::getline(ramStream, line)){
+      std::replace(line.begin(), line.end(),':',' ');
       std::istringstream linestream(line);
-      while(linestream >> value){
-        ram_vector.push_back(value);
+      while(linestream >> key){
+        if(key=="VmSize"){
+          linestream>>ramVal;
+          return ramVal;
+        }
       }
-  VmSize= ram_vector[17];  
-    }  
-return VmSize; 
+    }
+  }
+return ramVal; 
 }
 
 // TODO: Read and return the user ID associated with a process

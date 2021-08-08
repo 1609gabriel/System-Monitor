@@ -19,12 +19,24 @@ vector
 -
 linux_parser.h
 /home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/linux_parser.h
+process.h
+/home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/process.h
+format.h
+/home/gabriel/Udacity_OOP/SystemMonitor/CppND-System-Monitor/src/format.h
+
+include/format.h
+string
+-
 
 include/linux_parser.h
 fstream
 -
 regex
 -
+string
+-
+
+include/process.h
 string
 -
 

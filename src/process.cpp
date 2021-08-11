@@ -30,8 +30,8 @@ Process::Process(int pid){          //constructor
 
     //details see https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
     upTime = LinuxParser::UpTime();
-    totalTime= LinuxParser::ActiveJiffies(pid)/(sysconf(_SC_CLK_TCK));
-    startTime= LinuxParser::UpTime(pid)/(sysconf(_SC_CLK_TCK));
+    totalTime= LinuxParser::ActiveJiffies(pid);
+    startTime= LinuxParser::UpTime(pid);
     
     cpu_=100*(totalTime/(upTime-startTime));
 }

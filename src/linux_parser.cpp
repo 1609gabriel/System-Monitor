@@ -367,7 +367,7 @@ long LinuxParser::UpTime(int pid) {
                                         see https://man7.org/linux/man-pages/man5/proc.5.html */
     startTimeTicks=0;    
      } else {
-    startTimeTicks= stol(my_vector[22]);
+    startTimeTicks= stol(my_vector[21]);
     return startTimeTicks;
     }
   }  

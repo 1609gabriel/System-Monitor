@@ -23,7 +23,7 @@ Process::Process(int pid){          //constructor
         ram_=0.;
     } else {
         long rm=stol(ram);
-        ram_=rm*0.001;      //converting the memory utilization into megabytes
+        ram_=rm/1024;      //converting the memory utilization from kilobyte to megabytes
     }
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);

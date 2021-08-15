@@ -1,28 +1,33 @@
 #include <string>
-#include <ctime>
-
 #include "format.h"
 #include "linux_parser.h"
+#include <iomanip>  //setfill, setw
 
 using std::string;
-using std::ifstream;
-using std::istringstream;
+using std::stringstream;     //str
+using std::to_string;
+using std::setfill;
+using std::setw;
 
 // TODO: Complete this helper function
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
 // REMOVE: [[maybe_unused]] once you define the function
-string Format::ElapsedTime(long time_sys) { 
-    string line, day_, month_, nb_, time_, year;
-    time_t t= time_sys;             /*convert time_sys[sec.] to time_t (inherited from C), 
-                                    time_t enables to represents the system time*/
-    string time_string= ctime(&t);  //convert time_t value to string(https://www.cplusplus.com/reference/ctime/ctime/)
-                                    //output time_string - "Thu Jan 1 05:02:03 1970" */
-    istringstream stream(time_string);
-    if(stream){
-        getline(stream, line);
-        istringstream linestream(line);
-        linestream >> day_ >> month_ >> nb_ >> time_ >> year;
-  }
-    return time_; 
+string Format::ElapsedTime(long times) { 
+   stringstream timeFormat;
+
+   long hour=times/3600;
+   long min=(times%3600)/60;
+   long sec=(times%3600)%60;
+
+   string hourS= to_string(hour);
+   string minS= to_string(min);
+   string secS= to_string(sec);
+   
+   timeFormat << setfill('0') << setw(2) << hour <<':'    /*https://stackoverflow.com/questions/48310746/converting-time-into-hours-minutes-and-seconds*/
+              << setfill('0') << setw(2) << min << ':' 
+              << setfill('0') << setw(2) << sec;
+
+   string sysTime=timeFormat.str(); 
+   return sysTime;
 }

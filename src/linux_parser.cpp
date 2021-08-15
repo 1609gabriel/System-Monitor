@@ -356,7 +356,7 @@ string LinuxParser::Uid(int pid) {
       string key; 
       string value;
       string pidConvert= to_string(pid);
-      std::ifstream stream (kProcDirectory + pidConvert + kStatusFilename);   //cat /proc/[pid]/stat - Linux terminal
+      std::ifstream stream (kProcDirectory + pidConvert + kStatusFilename);   //cat /proc/[pid]/status - Linux terminal
       if(stream.is_open()){
         while(std::getline(stream, line)){
           std::replace(line.begin(), line.end(),':',' ');
@@ -399,14 +399,16 @@ string LinuxParser::User(int pid) {
   return value;
 }
 
-// TODO: Read an`d return the uptime of a process
+// TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid) { 
+
+//TODO: Function to be implemented in order to differ between linux version because of starttime
+long LinuxParser::UpTime(int pid) {
   string line;
-  string value; 
-  string time;
-  vector<string> my_vector;
-  long startTimeTicks;          //The time the process started after system boot
+  string value;
+  int upTimePid;
+  vector<string>my_vector;
+  long upTime= UpTime();
   string pidConvert= to_string(pid);
   std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
   if(jifstream.is_open()){
@@ -415,15 +417,12 @@ long LinuxParser::UpTime(int pid) {
     while(linestream >> value){
       my_vector.push_back(value);
     }
-    if(my_vector[21].empty()==true){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
-                                        see https://man7.org/linux/man-pages/man5/proc.5.html */
-    startTimeTicks=0;    
-     } else {
-    startTimeTicks= stol(my_vector[21]);
-    return startTimeTicks;
-    }
-  } else {
-    jifstream.close();
-  } 
-return startTimeTicks;
-}
+  } else {jifstream.close();}
+  if(my_vector[21].empty()){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
+                                see https://man7.org/linux/man-pages/man5/proc.5.html */
+    upTimePid= upTime;
+  } else{
+    upTimePid= upTime-(stol(my_vector[21])/sysconf(_SC_CLK_TCK));
+  }
+  return upTimePid;
+} 

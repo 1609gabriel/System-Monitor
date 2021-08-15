@@ -33,7 +33,7 @@ Process::Process(int pid){          //constructor
     totalTime= LinuxParser::ActiveJiffies(pid);
     startTime= LinuxParser::UpTime(pid);
     
-    cpu_=100*(totalTime/(upTime-startTime));
+    /*cpu_=100*(totalTime/(upTime-startTime));*/
 }
 
 // TODO: Return this process's ID

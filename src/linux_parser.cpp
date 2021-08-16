@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 #include "linux_parser.h"
 #include "process.h"
@@ -417,12 +418,12 @@ long LinuxParser::UpTime(int pid) {
     while(linestream >> value){
       my_vector.push_back(value);
     }
-  } else {jifstream.close();}
   if(my_vector[21].empty()){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
                                 see https://man7.org/linux/man-pages/man5/proc.5.html */
     upTimePid= upTime;
   } else{
     upTimePid= upTime-(stol(my_vector[21])/sysconf(_SC_CLK_TCK));
   }
-  return upTimePid;
+} else {jifstream.close();}
+return upTimePid;
 } 

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unistd.h>
 
 #include "process.h"
 #include "linux_parser.h"
@@ -14,26 +15,32 @@ using std::vector;
 using std::stol;
 
 Process::Process(int pid){          //constructor
-    long totalTime, startTime, upTime;
+    long totalTime;
+    long startTime;
     string ram;
     pid_=pid;
     command_=LinuxParser::Command(pid);
     ram= LinuxParser::Ram(pid); 
     if(ram.empty()==true){
-        ram_=0.;
+        ram_=0;
     } else {
-        long rm=stol(ram);
+        float rm=stof(ram);
         ram_=rm/1024;      //converting the memory utilization from kilobyte to megabytes
     }
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);
 
     //details see https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599
-    upTime = LinuxParser::UpTime();
     totalTime= LinuxParser::ActiveJiffies(pid);
     startTime= LinuxParser::UpTime(pid);
-    
-    /*cpu_=100*(totalTime/(upTime-startTime));*/
+
+    if(startTime==0){
+        cpu_=100*(totalTime/sysconf(_SC_CLK_TCK)); 
+    } else if (totalTime==0){
+       cpu_=100*((sysconf(_SC_CLK_TCK))/startTime);  
+    } else {
+       cpu_=100*((totalTime/sysconf(_SC_CLK_TCK))/startTime);  
+    }
 }
 
 // TODO: Return this process's ID

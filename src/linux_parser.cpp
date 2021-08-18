@@ -116,7 +116,8 @@ long LinuxParser::UpTime() {
   string line;
   string value;
   string key;
-  long time_sys, time_idle;
+  long time_sys; 
+  long time_idle;
   std::ifstream ustream (kProcDirectory + kUptimeFilename);
   if(ustream.is_open()){  
     while(std::getline(ustream, line)){
@@ -329,7 +330,6 @@ string LinuxParser::Ram(int pid) {
   string key; 
   string stringVal;
   string ramVal;
-  //long ramValMB;
   string pidConvert= to_string(pid);
   std::ifstream ramStream(kProcDirectory + pidConvert + kStatusFilename);  // cat /proc/[pid]/status , [pid] - run ls /proc 
   if(ramStream.is_open()){

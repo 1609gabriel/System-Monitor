@@ -15,8 +15,15 @@ using std::vector;
 // TODO: Return the aggregate CPU utilization
 
 float Processor::Utilization() { 
-  float totaldFloat, idledFloat, utilization;
-  long idle, nonIdle, totald, idled, prevTotal, total;
+  float totaldFloat; 
+  float idledFloat; 
+  float utilization;
+  long idle;
+  long nonIdle; 
+  long totald; 
+  long idled; 
+  long prevTotal; 
+  long total;
 
   utilization=0;
   nonIdle= LinuxParser::ActiveJiffies();

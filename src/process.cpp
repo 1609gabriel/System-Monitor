@@ -35,11 +35,11 @@ Process::Process(int pid){          //constructor
     startTime= LinuxParser::UpTime(pid);
 
     if(startTime==0){
-        cpu_=100*(totalTime/sysconf(_SC_CLK_TCK)); 
+        cpu_= totalTime/sysconf(_SC_CLK_TCK);       //cpu value expressed in %, multiplying by 100 already done in ncurses_display.cpp (line no.75)
     } else if (totalTime==0){
-       cpu_=100*((sysconf(_SC_CLK_TCK))/startTime);  
+       cpu_= sysconf(_SC_CLK_TCK)/startTime;  
     } else {
-       cpu_=100*((totalTime/sysconf(_SC_CLK_TCK))/startTime);  
+       cpu_= totalTime/sysconf(_SC_CLK_TCK)/startTime; 
     }
 }
 
@@ -53,25 +53,28 @@ float Process::CpuUtilization() {
     return cpu_; 
 }
 
-// TODO: Return the command that generated this process ok
+// TODO: Return the command that generated this process 
 string Process::Command() { 
-    string command_=LinuxParser::Command(Pid());
+    string comm=LinuxParser::Command(Pid());
+    if(comm.size()>40){
+        command_=comm.substr(0,40);
+    }
     return command_; 
 }
 
-// TODO: Return this process's memory utilization  ok
+// TODO: Return this process's memory utilization  
 string Process::Ram() { 
     string ram_=LinuxParser::Ram(Pid());
     return ram_; 
 }
 
-// TODO: Return the user (name) that generated this process ok
+// TODO: Return the user (name) that generated this process
 string Process::User() {
     string user_ = LinuxParser::User(Pid());
     return user_;
 }
 
-// TODO: Return the age of this process (in seconds) ok
+// TODO: Return the age of this process (in seconds) 
 long int Process::UpTime() { 
     return upTime_; 
 }

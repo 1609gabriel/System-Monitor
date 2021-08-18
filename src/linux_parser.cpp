@@ -97,10 +97,10 @@ float LinuxParser::MemoryUtilization() {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream stream (line);
       stream >> key >> value;
-        if(key == "MemTotal"){ 
+        if(key == filterMemTotalString){ 
           memTotalVal= stof(value);
           }
-        if(key == "MemFree"){
+        if(key == filterMemFreeString){
           memFreeVal= stof(value);
           }   
     memUtil= (memTotalVal- memFreeVal)/memTotalVal;
@@ -272,7 +272,7 @@ int LinuxParser::TotalProcesses() {
       while(std::getline(stream, line)){
         std::istringstream totstream(line); 
         totstream >> key >> val;
-        if(key== "processes"){
+        if(key== filterProcesses){
           totalProcNum = stoi(val);
           return totalProcNum;
           }
@@ -294,7 +294,7 @@ int LinuxParser::RunningProcesses(){
     while(std::getline(runstream, line)){
       std::istringstream runstream(line);
       runstream >> key >> val;
-      if(key == "procs_running"){
+      if(key == filterRunningProcesses){
           runProcNum = stoi(val);
           return runProcNum;
         }
@@ -309,6 +309,7 @@ int LinuxParser::RunningProcesses(){
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid) {          // [pid] - run ls /proc 
   string line;
+  string lineMod;
   string pidConvert= to_string(pid);
   std::ifstream commStream(kProcDirectory+pidConvert+kCmdlineFilename);
   if(commStream.is_open()){
@@ -336,9 +337,9 @@ string LinuxParser::Ram(int pid) {
       std::replace(line.begin(), line.end(),':',' ');
       std::istringstream linestream(line);
       while(linestream >> key){
-        if(key=="VmRSS"){     /*modified from "VmSize" to "VmRSS" based on feedback from code review,
-                              VmSize corresponds the size of virtual memory
-                              VmRSS corresponds physical memory*/ 
+        if(key==filterProcMemRSS){     /*modified from "VmSize" to "VmRSS" based on feedback from code review,
+                                        VmSize corresponds the size of virtual memory
+                                        VmRSS corresponds physical memory*/ 
           linestream>>ramVal;
           return ramVal;
         }
@@ -363,7 +364,7 @@ string LinuxParser::Uid(int pid) {
           std::replace(line.begin(), line.end(),':',' ');
           std::istringstream uidstream(line);
           while(uidstream >> key >> value){
-          if(key == "Uid"){
+          if(key == filterUID){
             return value;
             }
           }
@@ -400,16 +401,31 @@ string LinuxParser::User(int pid) {
   return value;
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
+//TODO: Helper Function to be implemented in order to distinguish between linux version because of starttime
+ float LinuxParser::KernelVersion() {
+  string os;
+  string osMod;
+  float osFl;
+  vector<string>os_vector;
+  string operSyst= LinuxParser::OperatingSystem();
+  std::istringstream linestream(operSyst);
+  while(linestream >> os){
+    os_vector.push_back(os);
+    }
+  os= os_vector[1];
+  osMod=os.substr(0,5);
+  osFl=stof(osMod);
+  return osFl;
+ }
 
-//TODO: Function to be implemented in order to differ between linux version because of starttime
+//Read and return the uptime of a process based on the startime related to linux version
 long LinuxParser::UpTime(int pid) {
   string line;
   string value;
   int upTimePid;
-  vector<string>my_vector;
+  vector<string>my_vector; 
   long upTime= UpTime();
+  float osFl=LinuxParser::KernelVersion();
   string pidConvert= to_string(pid);
   std::ifstream jifstream(kProcDirectory+pidConvert+kStatFilename);   //cat /proc/[pid]/stat - Linux terminal
   if(jifstream.is_open()){
@@ -418,12 +434,17 @@ long LinuxParser::UpTime(int pid) {
     while(linestream >> value){
       my_vector.push_back(value);
     }
-  if(my_vector[21].empty()){    /* (22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
-                                see https://man7.org/linux/man-pages/man5/proc.5.html */
+  if(my_vector[21].empty()){    /*(22) starttime  %llu, since Linux 2.6, the value is expressed in clock ticks - 
+                                see https://man7.org/linux/man-pages/man5/proc.5.html*/ 
     upTimePid= upTime;
   } else{
-    upTimePid= upTime-(stol(my_vector[21])/sysconf(_SC_CLK_TCK));
+      if(osFl>=2.6){
+        upTimePid= upTime-(stol(my_vector[21])/sysconf(_SC_CLK_TCK));  //Since Linux 2.6, this value was expressed in clock ticks 
+      } else {
+        upTimePid= upTime-(stol(my_vector[21]));  //kernels before Linux 2.6, this value was expressed in jiffies
+      }
   }
 } else {jifstream.close();}
 return upTimePid;
-} 
+}
+

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unistd.h>
+#include<iomanip>
 
 #include "process.h"
 #include "linux_parser.h"
@@ -24,8 +25,7 @@ Process::Process(int pid){          //constructor
     if(ram.empty()==true){
         ram_=0;
     } else {
-        float rm=stof(ram);
-        ram_=rm/1024;      //converting the memory utilization from kilobyte to megabytes
+        ram_=stof(ram);      
     }
     user_=LinuxParser::User(pid);
     upTime_=LinuxParser::UpTime(pid);
@@ -64,7 +64,15 @@ string Process::Command() {
 
 // TODO: Return this process's memory utilization  
 string Process::Ram() { 
-    string ram_=LinuxParser::Ram(Pid());
+    float ramVal;
+    string ram;
+    string ramm;
+    string ram_;
+    ram=LinuxParser::Ram(Pid());
+    ramVal= stof(ram);
+    ramVal= ramVal/1024;          //converting the memory utilization from kilobyte to megabytes
+    ramm= to_string(ramVal);
+    ram_=ramm.substr(0,5);
     return ram_; 
 }
 

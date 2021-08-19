@@ -26,7 +26,6 @@ const string filterMemTotalString("MemTotal");
 const string filterMemFreeString("MemFree"); 
 const string filterUID("Uid"); 
 const string filterProcMemRSS("VmRSS"); 
-const string filterProcMemVm("VmSize");
 
 // System
 float MemoryUtilization();

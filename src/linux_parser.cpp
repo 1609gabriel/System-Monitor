@@ -329,7 +329,8 @@ string LinuxParser::Ram(int pid) {
   string value; 
   string key; 
   string stringVal;
-  string ramVal;
+  string ramString;
+  string ramStringMod;
   string pidConvert= to_string(pid);
   std::ifstream ramStream(kProcDirectory + pidConvert + kStatusFilename);  // cat /proc/[pid]/status , [pid] - run ls /proc 
   if(ramStream.is_open()){
@@ -340,15 +341,14 @@ string LinuxParser::Ram(int pid) {
         if(key==filterProcMemRSS){     /*modified from "VmSize" to "VmRSS" based on feedback from code review,
                                         VmSize corresponds the size of virtual memory
                                         VmRSS corresponds physical memory*/ 
-          linestream>>ramVal;
-          return ramVal;
+          linestream>>ramString;
         }
       }
     }
   } else{
     ramStream.close();
   }
-return ramVal; 
+return ramString; 
 }
 
 // TODO: Read and return the user ID associated with a process

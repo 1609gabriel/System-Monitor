@@ -64,16 +64,8 @@ string Process::Command() {
 
 // TODO: Return this process's memory utilization  
 string Process::Ram() { 
-    float ramVal;
-    string ram;
-    string ramm;
-    string ram_;
-    ram=LinuxParser::Ram(Pid());
-    ramVal= stof(ram);
-    ramVal= ramVal/1024;          //converting the memory utilization from kilobyte to megabytes
-    ramm= to_string(ramVal);
-    ram_=ramm.substr(0,5);
-    return ram_; 
+    string ram= LinuxParser::Ram(Pid());
+    return ram; 
 }
 
 // TODO: Return the user (name) that generated this process

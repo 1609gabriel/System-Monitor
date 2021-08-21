@@ -25,7 +25,7 @@ Processor& System::Cpu() {
         for(const int& pid_:pids){
             Process new_process(pid_);
             processes_.emplace_back(pid_);
-            if(new_process.Command()!=""|| new_process.Ram()!=""){
+            if(new_process.Command()==""|| new_process.Ram()==""){
                 continue;
             }else {
                 processes_.emplace_back(new_process);

@@ -27,7 +27,6 @@ class Process {
    double cpu_; 
    float ram_;
    int pid_;
-  
 };
 
 #endif

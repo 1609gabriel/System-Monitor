@@ -19,15 +19,20 @@ Processor& System::Cpu() {
     return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { 
-    vector<int>pids=LinuxParser::Pids();
-    processes_.clear();
-    for(int unsigned i=0; i<pids.size();i++){
-        Process p(pids[i]);
-        processes_.push_back(p);
+
+    vector<Process>& System::Processes(){
+        const vector<int>&pids=LinuxParser::Pids();
+        for(const int& pid_:pids){
+            Process new_process(pid_);
+            processes_.emplace_back(pid_);
+            if(new_process.Command()!=""|| new_process.Ram()!=""){
+                continue;
+            }else {
+                processes_.emplace_back(new_process);
+            }
+        }
+        return processes_;
     }
-    return processes_; 
-}
 
 // TODO: Return the system's kernel identifier (string)
 string System::Kernel() { 

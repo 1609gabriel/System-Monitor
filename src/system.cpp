@@ -24,7 +24,6 @@ Processor& System::Cpu() {
         const vector<int>&pids=LinuxParser::Pids();
         for(const int& pid_:pids){
             Process new_process(pid_);
-            processes_.emplace_back(pid_);
             if(new_process.Command()==""|| new_process.Ram()==""){
                 continue;
             }else {

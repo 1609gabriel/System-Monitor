@@ -80,9 +80,18 @@ long int Process::UpTime() {
     return upTime_; 
 }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
+/*Overload the "less than" comparison operator for Process objects*/
+
+/*CLEAN CODE HW - SOLID principle no.2 - OPEN/CLOSED PRINCIPLE meaning SW units are open for extension but close for modification*/
+
+/*This allows to add new functionality w/o changing of existing source code. 
+This may be applied by Polymorphism.
+Polymorphism can be achieved in two ways in C++: Overloading and Overriding.
+
+The source code below used "less than" comparison overloading operator for Process objects 
+to be able to sort out the most intesive running processes based on their cpu*/
+
 bool Process::operator<(Process const& a) const {
-   return this ->cpu_ > a.cpu_;                 /*the left part of the operation is referring the object itself*/
+   return this ->cpu_ > a.cpu_;                   /*the left part of the operation is referring the object itself*/
 }
 

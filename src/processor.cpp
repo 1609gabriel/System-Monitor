@@ -50,9 +50,3 @@ float Processor::Utilization() {
    cpu (aggregates in all of other "cpuN" lines) 
    user time(1.col.),nice t.(2.col.),system t.(3.col.),idletime(4.col.) + iowait(5.col.),
    irq(6.column) + softirq(7.column) + steal(8.column)*/
-
-
-
-
-
-

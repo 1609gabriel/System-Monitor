@@ -76,7 +76,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
+// Read and return the system memory utilization
 
 /* Memory Utilization() based on the formula --> Total used memory = MemTotal - MemFree/ MemTotal
 more information concerning memory utilization 
@@ -111,7 +111,7 @@ float LinuxParser::MemoryUtilization() {
   return memUtil;
 }
    
-// TODO: Read and return the system uptime
+// Read and return the system uptime
 long LinuxParser::UpTime() { 
   string line;
   string value;
@@ -130,7 +130,7 @@ long LinuxParser::UpTime() {
   return time_sys; 
 }
 
-// TODO: Read and return the number of jiffies for the system
+// Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { 
   long numSystTicks;  //number of ticks the system made since the last boot
   long sysTime = UpTime();
@@ -142,8 +142,7 @@ long LinuxParser::Jiffies() {
   return numSystTicks;
 }
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
+// Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid) { 
   /*To calculate CPU usage for a specific process see: 
   https://stackoverflow.com/questions/16726779/how-do-i-get-the-total-cpu-usage-of-an-application-from-proc-pid-stat/16736599#16736599 */
@@ -186,7 +185,7 @@ return totalTime;
 }
   
 
-// TODO: Read and return the number of active jiffies for the system
+// Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
   std::vector<string> jif= CpuUtilization();
   long a, b, c, d, e, f, g, h;
@@ -226,7 +225,7 @@ long LinuxParser::ActiveJiffies() {
   return a + b + c + d + e + f + g + h;
 }
 
-// TODO: Read and return the number of idle jiffies for the system
+// Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { 
   std::vector<string>cpu= CpuUtilization();
   long i, j;
@@ -242,7 +241,7 @@ long LinuxParser::IdleJiffies() {
   return i + j;  
   }
 
-// TODO: Read and return CPU utilization
+// Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
   vector<string>cpu;
   string key;
@@ -262,7 +261,7 @@ vector<string> LinuxParser::CpuUtilization() {
   return cpu; 
 }
 
-// TODO: Read and return the total number of processes
+// Read and return the total number of processes
 int LinuxParser::TotalProcesses() { 
   string line;
   string val; 
@@ -284,7 +283,7 @@ int LinuxParser::TotalProcesses() {
   return totalProcNum; 
   }
 
-// TODO: Read and return the number of running processes
+// Read and return the number of running processes
 int LinuxParser::RunningProcesses(){  
   string line;
   string val; 
@@ -306,8 +305,7 @@ int LinuxParser::RunningProcesses(){
  return runProcNum; 
 }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+// Read and return the command associated with a process
 string LinuxParser::Command(int pid) {          // [pid] - run ls /proc 
   string line;
   string lineMod;
@@ -321,8 +319,7 @@ string LinuxParser::Command(int pid) {          // [pid] - run ls /proc
   return line; 
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
+// Read and return the memory used by a process
 
 string LinuxParser::Ram(int pid) { 
   string line;
@@ -352,8 +349,8 @@ string LinuxParser::Ram(int pid) {
 return ramString; 
 }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+// Read and return the user ID associated with a process
+
 string LinuxParser::Uid(int pid) { 
       string line;
       string key; 
@@ -376,8 +373,8 @@ string LinuxParser::Uid(int pid) {
   return value;
 }
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
+// Read and return the user associated with a process
+
 string LinuxParser::User(int pid) { 
   string userID= Uid(pid);
   string line;
@@ -402,7 +399,7 @@ string LinuxParser::User(int pid) {
   return value;
 }
 
-//TODO: Helper Function to be implemented in order to distinguish between linux version because of starttime
+// Helper function to be implemented in order to distinguish between linux version because of starttime
  float LinuxParser::KernelVersion() {
   string os;
   string osMod;

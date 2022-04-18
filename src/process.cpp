@@ -44,17 +44,17 @@ Process::Process(int pid){          //constructor
     }
 }
 
-// TODO: Return this process's ID
+// Return this process's ID
 int Process::Pid(){
     return pid_;
 }
 
-// TODO: Return this process's CPU utilization
+// Return this process's CPU utilization
 float Process::CpuUtilization() { 
     return cpu_; 
 }
 
-// TODO: Return the command that generated this process 
+// Return the command that generated this process 
 string Process::Command() { 
     string comm=LinuxParser::Command(Pid());
     if(comm.size()>40){
@@ -63,19 +63,19 @@ string Process::Command() {
     return command_; 
 }
 
-// TODO: Return this process's memory utilization  
+// Return this process's memory utilization  
 string Process::Ram() { 
     string ram= LinuxParser::Ram(Pid());
     return ram; 
 }
 
-// TODO: Return the user (name) that generated this process
+// Return the user (name) that generated this process
 string Process::User() {
     string user_ = LinuxParser::User(Pid());
     return user_;
 }
 
-// TODO: Return the age of this process (in seconds) 
+// Return the age of this process (in seconds) 
 long int Process::UpTime() { 
     return upTime_; 
 }

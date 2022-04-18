@@ -12,16 +12,25 @@ class System {
   Processor& Cpu();                  
   std::vector<Process>& Processes(); 
   float MemoryUtilization();          
-  long UpTime();                      
+  long UpTime();    
   int TotalProcesses();               
   int RunningProcesses();             
   std::string Kernel();               
-  std::string OperatingSystem();      
-
-  // TODO: Define any necessary private members
+  std::string OperatingSystem();   
+   
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
+};
+
+class SystemMicro {      /* base class - cannot be instantiated*/
+ public:
+  virtual long UpTimeS()const = 0; /* pure virtual function --> interface */
+};
+
+class SystemESP32 : public SystemMicro{  /* derived class */
+ public:
+  long UpTimeS()const override;
 };
 
 #endif

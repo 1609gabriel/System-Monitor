@@ -30,6 +30,7 @@ const string filterProcMemRSS("VmRSS");
 // System
 float MemoryUtilization();
 long UpTime();
+long UpTimeSub();
 std::vector<int> Pids();
 int TotalProcesses();
 int RunningProcesses();

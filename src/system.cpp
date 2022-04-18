@@ -14,11 +14,11 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-// TODO: Return the system's CPU - already implemented
+// Return the system's CPU - already implemented
 Processor& System::Cpu() { 
     return cpu_; }
 
-// TODO: Return a container composed of the system's processes
+// Return a container composed of the system's processes
 
     vector<Process>& System::Processes(){
         const vector<int>&pids=LinuxParser::Pids();
@@ -33,38 +33,43 @@ Processor& System::Cpu() {
         return processes_;
     }
 
-// TODO: Return the system's kernel identifier (string)
+// Return the system's kernel identifier (string)
 string System::Kernel() { 
     string ke= LinuxParser::Kernel();
     return ke; 
 }
 
-// TODO: Return the system's memory utilization
+// Return the system's memory utilization
 float System::MemoryUtilization() { 
     float mu= LinuxParser::MemoryUtilization();
     return mu; 
 }
 
-// TODO: Return the operating system name
+// Return the operating system name
 string System::OperatingSystem() { 
     string os= LinuxParser::OperatingSystem();
     return os; 
 }
 
-// TODO: Return the number of processes actively running on the system
+// Return the number of processes actively running on the system
 int System::RunningProcesses() { 
     int rp= LinuxParser::RunningProcesses();
     return rp; 
 }
 
-// TODO: Return the total number of processes on the system
+// Return the total number of processes on the system
 int System::TotalProcesses() { 
     int tp= LinuxParser::TotalProcesses();    
     return tp; 
 }
 
-// TODO: Return the number of seconds since the system started running
+// Return the number of seconds since the system started running
 long System::UpTime() { 
     long ut= LinuxParser::UpTime();
     return ut; 
 }
+/*
+long SystemESP32::UpTimeS()const{
+    long it = LinuxParser::UpTimeSub();
+    return it;
+} */

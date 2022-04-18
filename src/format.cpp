@@ -5,15 +5,15 @@
 
 
 using std::string;
-using std::stringstream;     //str
+using std::stringstream;   
 using std::to_string;
 using std::setfill;
 using std::setw;
 
-// TODO: Complete this helper function
+// Helper function
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
-// REMOVE: [[maybe_unused]] once you define the function
+
 string Format::ElapsedTime(long times) { 
    stringstream timeFormat;
 

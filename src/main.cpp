@@ -15,5 +15,6 @@ All clean code principles in this source code are named and marked by number*/
 
 int main() {
   System system;
+  //SystemESP32 systemESP32;
   NCursesDisplay::Display(system);
 }
